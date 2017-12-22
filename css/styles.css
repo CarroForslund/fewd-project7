@@ -118,6 +118,7 @@ button {
 }
 
 .btn__reset {
+  cursor: pointer;
   padding: 8px;
   margin: 50px auto;
   background: #FFFFFF;
@@ -166,4 +167,8 @@ button {
 
 .lose a {
   color: var(--color-lose);
+}
+
+.hidden, .hidden.children {
+  display: none;
 }
