@@ -10,30 +10,45 @@ let missed = 0;
 
 //Attach a event listener to the “Start Game” button to hide the start screen overlay.
 startButton.addEventListener('click', function (event) {
+
   const overlay = document.getElementById('overlay');
-  overlay.setAttribute('class', 'hidden');
-  startButton.setAttribute('class', 'hidden');
-  gameTitle.setAttribute('class', 'hidden');
+  // overlay.setAttribute('class', 'hidden');
+  // startButton.setAttribute('class', 'hidden');
+  // gameTitle.setAttribute('class', 'hidden');
+  overlay.parentNode.removeChild(overlay);
+  startButton.parentNode.removeChild(startButton);
+  gameTitle.parentNode.removeChild(gameTitle);
+
   getRandomPhraseAsArray(phrases);
+
 });
 
 function getRandomPhraseAsArray(array){
+
   let phrase = phrases[Math.floor(Math.random()*phrases.length)]; //get random phrase
   const phraseArray = phrase.split('');  //split sentence into characters
 
   // return characterArray;
-
+  console.log(phraseArray);
   addPhraseToDisplay(phraseArray);
+
 }
 
 function addPhraseToDisplay(array){
+
   const phraseDiv = document.getElementById('phrase');
   const ul = phraseDiv.getElementsByTagName('ul')[0];
+
   for (character of array){
     const li = document.createElement('li');
+
     if(character !== ' '){
       li.className += 'letter';
     }
+    else{
+      li.className += 'space';
+    }
+
     li.innerHTML = character;
     ul.appendChild(li);
 
@@ -41,34 +56,66 @@ function addPhraseToDisplay(array){
 }
 
 function checkLetter(buttonClicked){
-  const letters = document.getElementsByClassName('letter').innerHTML();
-  for (letter of letters){
-    if (letter === buttonClicked){
-      letter.className += 'show';
-      return letter;
-    }
-    else{
-      return null;
+
+  const letters = document.getElementsByClassName('letter'); //Get all letters in phrase
+  const guessedLetter = buttonClicked.innerHTML.toLowerCase(); //Guessed letter
+  let match = false;
+
+  //Loop through letters in Phrase to find match with guessed letter
+  for (let i = 0; i < letters.length; i++){
+    const letter = letters[i].innerHTML.toLowerCase(); //Letter in Phrase
+
+    if (letter === guessedLetter){
+      letters[i].classList.add('show');
+      match = true;
     }
   }
+
+  //Return result. If letter matched return letter. Else return null.
+  if (match){
+    return guessedLetter;
+  }
+  else {
+    return null;
+  }
+
 }
 
-
-//WHY CAN'T I ADD EVENT LISTENER TO BUTTONS?!?!??!
+//Event listener for Keyboard Buttons
 for (button of keyboardButtons){
   console.log(button);
   button.addEventListener('click', function(event){
-    console.log('click');
-    const letterFound = checkLetter(button);
-    button.addAttribute('disabled', 'true');
+    const clickedButton = this; //Rename "this" to make code more readable
+    //Disable clicked button
+    //Check if letter can be found in phrase
+    //If not add guess to missed guesses
+    console.log(clickedButton);
+    clickedButton.disabled = true;
+    const letterFound = checkLetter(clickedButton);
+    if (letterFound === null){
+      missed++;
+      console.log(missed);
+    }
+    checkWin();
   });
 }
 
-for (let i = 0; i < keyboardButtons.length; i++){
-  const keyboardButton = keyboardButtons[i];
-  keyboardButton.addEventListener('click', function(event){
-    console.log('click');
-    const letterFound = checkLetter(button);
-    keyboardButton.addAttribute('disabled', 'true');
-  });
+function checkWin(){
+  //check if the number of letters with class “show” is equal to the number of
+  //letters with class “letters”.
+  shownLetters = document.getElementsByClassName('show');
+  letters = document.getElementsByClassName('letter');
+  //If they’re equal, show the overlay screen with the “win” class and
+  //appropriate text.
+  if (shownLetters.length === letters.length){
+    console.log('You won!');
+
+    
+
+  }
+  //Otherwise, if the number of misses is equal to or greater than 5,
+  //show the overlay screen with the “lose” class and appropriate text.
+  if (missed >= 5){
+    console.log('You lost!');
+  }
 }
