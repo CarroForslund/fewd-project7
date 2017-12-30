@@ -11,9 +11,7 @@ let missed = 0;
 
 //Attach a event listener to the “Start Game” button to hide the start screen overlay.
 startButton.addEventListener('click', function (event) {
-  // overlay.setAttribute('class', 'hidden');
-  // startButton.setAttribute('class', 'hidden');
-  // gameTitle.setAttribute('class', 'hidden');
+
   overlay.parentNode.removeChild(overlay);
   startButton.parentNode.removeChild(startButton);
   gameTitle.parentNode.removeChild(gameTitle);
@@ -110,26 +108,26 @@ function checkWin(){
   //appropriate text.
   if (shownLetters.length === letters.length){
 
-    setOverlay('win', 'You won! :)');
-    missed = 0;
-
-
-    // startButton.parentNode.removeChild(startButton);
-    // gameTitle.parentNode.removeChild(gameTitle);
+    gameOver('win', 'You won! :)');
 
   }
   //Otherwise, if the number of misses is equal to or greater than 5,
   //show the overlay screen with the “lose” class and appropriate text.
   if (missed >= 5){
 
-    setOverlay('lose', 'You lost! :(');
-    missed = 0;
+    gameOver('lose', 'You lost! :(');
+
   }
 }
 
-const setOverlay = function(result, message){
+function gameOver(result, message){
 
+  //Display result
   const mainContainer = document.getElementsByClassName('main-container')[0];
+  const letters = document.getElementsByClassName('letter'); //Get all letters in phrase
+  const phraseList = document.getElementById('phrase').getElementsByTagName('ul')[0];
+  // const ul = phraseDiv.getElementsByTagName('ul')[0];
+
   // const overlay = document.createElement('div');
   // const h2 = document.createElement('h2');
   // const playButton = document.createElement('a');
@@ -144,4 +142,20 @@ const setOverlay = function(result, message){
   overlay.appendChild(startButton);
 
   mainContainer.insertBefore(overlay, mainContainer.firstChild);
+
+  //Reset Game
+  for (let i = 0; i < letters.length; i++){
+    letters[i].classList.remove('show');
+  }
+
+  while (phraseList.firstChild) {
+      phraseList.removeChild(phraseList.firstChild);
+  }
+
+  for (button of keyboardButtons){
+    button.disabled = false;
+
+  }
+
+  missed = 0;
 }
