@@ -1,4 +1,5 @@
 //Declare variables
+const overlay = document.getElementById('overlay');
 const qwerty = document.getElementById('qwerty');
 const keyboardButtons = qwerty.getElementsByTagName('button');
 const startButton = document.getElementsByClassName('btn__reset')[0];
@@ -10,8 +11,6 @@ let missed = 0;
 
 //Attach a event listener to the “Start Game” button to hide the start screen overlay.
 startButton.addEventListener('click', function (event) {
-
-  const overlay = document.getElementById('overlay');
   // overlay.setAttribute('class', 'hidden');
   // startButton.setAttribute('class', 'hidden');
   // gameTitle.setAttribute('class', 'hidden');
@@ -103,19 +102,46 @@ for (button of keyboardButtons){
 function checkWin(){
   //check if the number of letters with class “show” is equal to the number of
   //letters with class “letters”.
-  shownLetters = document.getElementsByClassName('show');
-  letters = document.getElementsByClassName('letter');
+  const shownLetters = document.getElementsByClassName('show');
+  const letters = document.getElementsByClassName('letter');
+
+  // const mainContainerChildNodes = mainContainer.querySelectorAll('div');
   //If they’re equal, show the overlay screen with the “win” class and
   //appropriate text.
   if (shownLetters.length === letters.length){
-    console.log('You won!');
 
-    
+    setOverlay('win', 'You won! :)');
+    missed = 0;
+
+
+    // startButton.parentNode.removeChild(startButton);
+    // gameTitle.parentNode.removeChild(gameTitle);
 
   }
   //Otherwise, if the number of misses is equal to or greater than 5,
   //show the overlay screen with the “lose” class and appropriate text.
   if (missed >= 5){
-    console.log('You lost!');
+
+    setOverlay('lose', 'You lost! :(');
+    missed = 0;
   }
+}
+
+const setOverlay = function(result, message){
+
+  const mainContainer = document.getElementsByClassName('main-container')[0];
+  // const overlay = document.createElement('div');
+  // const h2 = document.createElement('h2');
+  // const playButton = document.createElement('a');
+  gameTitle.innerHTML = "Start New Game";
+  // h2.innerHTML = message; //Message to player with result
+  // playButton.innerHTML = 'Start New Game';
+  // playButton.classList.add('btn__reset');
+
+  overlay.setAttribute('id', 'overlay');
+  overlay.classList.add(result);
+  overlay.appendChild(gameTitle);
+  overlay.appendChild(startButton);
+
+  mainContainer.insertBefore(overlay, mainContainer.firstChild);
 }
